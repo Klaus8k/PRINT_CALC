@@ -1,3 +1,5 @@
+from tkinter import *
+from tkinter.ttk import Combobox
 
 def print_calc():
 
@@ -16,29 +18,53 @@ def print_calc():
     print_oki_calc = (toner_price_k/22000*coverage_k/5 + toner_price_cmy/22000*coverage_cmy/5 +
                             (4 * drum_price/30000 + fuser_price/100000 + belt_price/100000) / coefficient_media[1])
 
-    # сколькоо сторон?
-    paper_flip = input('сколькоо сторон? 1/2\n')
-    print_oki_calc *= int(paper_flip)
-
-    # # Формат SRA3 да или нет?
-    # paper_format = input('Формат SRA3 y/n\n')
-    # if paper_format == 'y':
-    #     print_oki_calc *= 2
-
-    # Ламинация есть или нет?
-    lamination = input("Ламинация есть? у/n\n")
-    if lamination == 'y':
-        print_oki_calc += 15
-
-    # цена бумаги.
-    paper_price_sra3 = input('Цена листа бумаги SRA3\n')
-
-    return print_oki_calc + int(paper_price_sra3)
+    return print_oki_calc
 
 print(print_calc())
 
 
+def sum_on_list(x,y): # Количество изделий на листе
+    x.set(width_suit.get())
 
-# цена бумаги
-def paper_price():
-    pass
+
+
+    free_space = 5 # поля
+    w_list = 320 - 2 * free_space # размеры для SRA3
+    h_list = 450 - 2 * free_space
+    return max([w_list//x * h_list//y],[w_list//y * h_list//x])
+
+# UI программы
+window = Tk()
+window.title('Калькулятор печати OKI9655')
+window.geometry('500x300+150+300') # геометрия окна
+txt_format_suit = Label(window, text = 'Формат изделия  ').grid(column = 0, row = 1)
+txt_width_suit = Label(window, text = 'Width').grid(column = 1, row = 0, padx = 5)
+txt_height_suit = Label(window, text = 'Height').grid(column = 2, row = 0)
+
+width_suit = IntVar()
+width_suit = Entry(window, width = 10) # ввод ширины изделия
+width_suit.grid(column = 1, row = 1)
+
+height_suit = IntVar() # Не передается в функцию ширина и высота
+height_suit = Entry(window, width = 10) # ввод высоты изделия
+height_suit.grid(column = 2, row = 1)
+
+txt_media = Label(window, text = 'Выбери бумагу  ').grid(column = 0, row = 2, pady = 5)
+
+# Выбор бумаги
+choise_media = Combobox(window, values = ('130g/m', '200g/m', '350g/m')).grid(column = 1, row = 2, columnspan = 2)
+
+
+
+
+
+print (sum_on_list())
+
+
+
+
+
+
+
+window.mainloop()
+
