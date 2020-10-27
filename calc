@@ -1,0 +1,44 @@
+
+def print_calc():
+
+    toner_price_k = 6600/3 # Цена банки черного (3 картриджа)
+    toner_price_cmy = 8000 * 3/3 # Цена 3х банок цветных (по 3 картриджа)
+    coverage_k = 50 # покрытие черного
+    coverage_cmy = 140 # сумма покрытий цветных
+    drum_price = 15750 # цена драма
+    coefficient_media = [1 , 0.75 , 0.5] # Коэффициент плотности носителя 80-120 150-200 250-400
+    fuser_price = 17170 # цена печки
+    belt_price = 17170 # цена ремня
+
+# Общая фрмула расчета цены печати
+# цена отпечатка А4 цена тонера/ресурс * на покрытие / 5% + 4 драма + печка + ремень / коэффициент плотности
+
+    print_oki_calc = (toner_price_k/22000*coverage_k/5 + toner_price_cmy/22000*coverage_cmy/5 +
+                            (4 * drum_price/30000 + fuser_price/100000 + belt_price/100000) / coefficient_media[1])
+
+    # сколькоо сторон?
+    paper_flip = input('сколькоо сторон? 1/2\n')
+    print_oki_calc *= int(paper_flip)
+
+    # # Формат SRA3 да или нет?
+    # paper_format = input('Формат SRA3 y/n\n')
+    # if paper_format == 'y':
+    #     print_oki_calc *= 2
+
+    # Ламинация есть или нет?
+    lamination = input("Ламинация есть? у/n\n")
+    if lamination == 'y':
+        print_oki_calc += 15
+
+    # цена бумаги.
+    paper_price_sra3 = input('Цена листа бумаги SRA3\n')
+
+    return print_oki_calc + int(paper_price_sra3)
+
+print(print_calc())
+
+
+
+# цена бумаги
+def paper_price():
+    pass
