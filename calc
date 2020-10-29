@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.ttk import Combobox
 
+
 def print_calc():
 
     toner_price_k = 6600/3 # Цена банки черного (3 картриджа)
@@ -15,23 +16,35 @@ def print_calc():
 # Общая фрмула расчета цены печати
 # цена отпечатка А4 цена тонера/ресурс * на покрытие / 5% + 4 драма + печка + ремень / коэффициент плотности
 
-    print_oki_calc = (toner_price_k/22000*coverage_k/5 + toner_price_cmy/22000*coverage_cmy/5 +
+    print_oki_calc = 2 * (toner_price_k/22000*coverage_k/5 + toner_price_cmy/22000*coverage_cmy/5 +
                             (4 * drum_price/30000 + fuser_price/100000 + belt_price/100000) / coefficient_media[1])
 
     return print_oki_calc
 
-print(print_calc())
-
-
-def sum_on_list(x,y): # Количество изделий на листе
-    x.set(width_suit.get())
+def onelist_pr_price(): # цена печати 1 изделия без суммы красок!
+    pass
 
 
 
+
+def sum_on_list(): # Количество изделий на листе
+    Entry.delete(finish_exit,0,END)
+    x = int(width_suit.get())+4
+    y = int(Entry.get(height_suit))+4
     free_space = 5 # поля
     w_list = 320 - 2 * free_space # размеры для SRA3
     h_list = 450 - 2 * free_space
-    return max([w_list//x * h_list//y],[w_list//y * h_list//x])
+    sum = max([w_list//x * h_list//y],[w_list//y * h_list//x])
+    return sum
+
+
+def finish(): # вывод результата
+
+
+    x = int(width_suit.get())
+    y = int(Entry.get(height_suit))
+    result = f'Размер изделия {x}x{y}, На 1 листе SRA3 {sum_on_list()} изделий.'
+    Entry.insert(finish_exit, 0, result)
 
 # UI программы
 window = Tk()
@@ -40,29 +53,22 @@ window.geometry('500x300+150+300') # геометрия окна
 txt_format_suit = Label(window, text = 'Формат изделия  ').grid(column = 0, row = 1)
 txt_width_suit = Label(window, text = 'Width').grid(column = 1, row = 0, padx = 5)
 txt_height_suit = Label(window, text = 'Height').grid(column = 2, row = 0)
-
-width_suit = IntVar()
 width_suit = Entry(window, width = 10) # ввод ширины изделия
 width_suit.grid(column = 1, row = 1)
-
-height_suit = IntVar() # Не передается в функцию ширина и высота
 height_suit = Entry(window, width = 10) # ввод высоты изделия
 height_suit.grid(column = 2, row = 1)
-
-txt_media = Label(window, text = 'Выбери бумагу  ').grid(column = 0, row = 2, pady = 5)
-
 # Выбор бумаги
+txt_media = Label(window, text = 'Выбери бумагу  ').grid(column = 0, row = 2, pady = 5)
 choise_media = Combobox(window, values = ('130g/m', '200g/m', '350g/m')).grid(column = 1, row = 2, columnspan = 2)
+# Тираж
+pressrun_txt = Label(window, text = 'Тираж').grid(column = 0, row = 3)
+pressrun = Entry(window, width = 10)
+pressrun.grid(column = 1, row = 3)
 
-
-
-
-
-print (sum_on_list())
-
-
-
-
+# вывод результата (количество изделий на листе)
+finish_exit = Entry(window, width = 80)
+finish_exit.grid(column = 0, row = 8, columnspan = 3, pady = 32)
+finish_b = Button(window, text = 'START', command = finish).grid(column = 1, row = 9)
 
 
 
