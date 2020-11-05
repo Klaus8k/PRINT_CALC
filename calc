@@ -1,50 +1,72 @@
 from tkinter import *
 from tkinter.ttk import Combobox
+from tkinter import messagebox
 
 
 def print_calc():
 
     toner_price_k = 6600/3 # Цена банки черного (3 картриджа)
     toner_price_cmy = 8000 * 3/3 # Цена 3х банок цветных (по 3 картриджа)
-    coverage_k = 50 # покрытие черного
-    coverage_cmy = 140 # сумма покрытий цветных
+    coverage_k = 5 # покрытие черного
+    coverage_cmy = 20 # сумма покрытий цветных
     drum_price = 15750 # цена драма
-    coefficient_media = [1 , 0.75 , 0.5] # Коэффициент плотности носителя 80-120 150-200 250-400
     fuser_price = 17170 # цена печки
     belt_price = 17170 # цена ремня
+
+    # Коэффициент плотности носителя 80-130 - 1, 150-250 - 0.75, 300-400 - 0.5
+    if int(choise_media.get()) < 150:
+        coefficient_media = 1
+    elif int(choise_media.get()) < 300:
+        coefficient_media = 0.75
+    else: coefficient_media = 0.5
 
 # Общая фрмула расчета цены печати
 # цена отпечатка А4 цена тонера/ресурс * на покрытие / 5% + 4 драма + печка + ремень / коэффициент плотности
 
     print_oki_calc = 2 * (toner_price_k/22000*coverage_k/5 + toner_price_cmy/22000*coverage_cmy/5 +
-                            (4 * drum_price/30000 + fuser_price/100000 + belt_price/100000) / coefficient_media[1])
+                            (4 * drum_price/30000 + fuser_price/100000 + belt_price/100000) / coefficient_media)
 
     return print_oki_calc
 
-def onelist_pr_price(): # цена печати 1 изделия без суммы красок!
-    pass
+# Цены на бумагу
+def paper_price():
+    if int(choise_media.get()) < 150:
+        return 3
+    elif int(choise_media.get()) < 300:
+        return 5
+    else:
+        return 10
+
+ # вывод результата с проверкой на 0
+def finish():
+    lists = int(pressrun.get())//sum_on_list() # Листов в тираже
+
+    try:
+        result = f'Размер изделия {int(width_suit.get())+4}x{int(height_suit.get())+4}\n' \
+                 f'На 1 листе SRA3 {sum_on_list()} изделий.\n' \
+                 f'необходимо {lists} листов, на сумму {lists * paper_price()}руб.\n'\
+                 f'Цена тиража: {int(print_calc())*lists + paper_price() * lists} руб.'
+        label_finish['text'] = result
+        return result
+
+    except ZeroDivisionError :
+        messagebox.showinfo ('Error', 'Что то не так!')
 
 
 
 
-def sum_on_list(): # Количество изделий на листе
-    Entry.delete(finish_exit,0,END)
+
+ # Количество изделий на листе
+def sum_on_list() -> object:
+    label_finish['text'] = ''
     x = int(width_suit.get())+4
-    y = int(Entry.get(height_suit))+4
+    y = int(height_suit.get())+4
     free_space = 5 # поля
     w_list = 320 - 2 * free_space # размеры для SRA3
     h_list = 450 - 2 * free_space
-    sum = max([w_list//x * h_list//y],[w_list//y * h_list//x])
+    sum = max((w_list//x) * (h_list//y) , (w_list//y) * (h_list//x))
+
     return sum
-
-
-def finish(): # вывод результата
-
-
-    x = int(width_suit.get())
-    y = int(Entry.get(height_suit))
-    result = f'Размер изделия {x}x{y}, На 1 листе SRA3 {sum_on_list()} изделий.'
-    Entry.insert(finish_exit, 0, result)
 
 # UI программы
 window = Tk()
@@ -59,18 +81,20 @@ height_suit = Entry(window, width = 10) # ввод высоты изделия
 height_suit.grid(column = 2, row = 1)
 # Выбор бумаги
 txt_media = Label(window, text = 'Выбери бумагу  ').grid(column = 0, row = 2, pady = 5)
-choise_media = Combobox(window, values = ('130g/m', '200g/m', '350g/m')).grid(column = 1, row = 2, columnspan = 2)
+choise_media = Combobox(window)
+choise_media['values'] = (80,130, 200, 350)
+choise_media.current(0)
+choise_media.grid(column = 1, row = 2, columnspan = 2)
 # Тираж
 pressrun_txt = Label(window, text = 'Тираж').grid(column = 0, row = 3)
 pressrun = Entry(window, width = 10)
 pressrun.grid(column = 1, row = 3)
 
-# вывод результата (количество изделий на листе)
-finish_exit = Entry(window, width = 80)
-finish_exit.grid(column = 0, row = 8, columnspan = 3, pady = 32)
+# Кнопка ФИНИШ
 finish_b = Button(window, text = 'START', command = finish).grid(column = 1, row = 9)
-
+# вывод результата
+label_finish = Label()
+label_finish.grid(column = 0, columnspan = 3, row = 10)
 
 
 window.mainloop()
-
