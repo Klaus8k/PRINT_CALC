@@ -83,7 +83,7 @@ def sum_on_list() -> object:
 # UI программы
 window = Tk()
 window.title('Калькулятор печати OKI9655')
-window.geometry('500x300+150+300')  # геометрия окна
+window.geometry('300x200+150+300')  # геометрия окна
 txt_format_suit = Label(window, text='Формат изделия  ').grid(column=0, row=1)
 txt_width_suit = Label(window, text='Width').grid(column=1, row=0, padx=5)
 txt_height_suit = Label(window, text='Height').grid(column=2, row=0)
