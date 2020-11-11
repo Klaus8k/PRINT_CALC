@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter.ttk import Combobox
 from tkinter import messagebox
-from Image_sum_CMYK import *
+import Image_sum_CMYK as color_s
 
 
 # Калькуляция печати без бумги
@@ -15,15 +15,9 @@ def print_calc():
     belt_price = 17170  # цена ремня
 
     # плотности красок
-    if density_var.get() == 0:
-        coverage_k = 10  # покрытие черного
-        coverage_cmy = 20  # сумма покрытий цветных
-    elif density_var.get() == 1:
-        coverage_k = 20
-        coverage_cmy = 80
-    elif density_var.get() == 2:
-        coverage_k = 30
-        coverage_cmy = 150
+    color_sum = color_s.sum_cmyk()
+    coverage_k = color_sum[3]
+    coverage_cmy = sum(color_sum[:-1])
 
     # Коэффициент плотности носителя 80-130 - 1, 150-250 - 0.75, 300-400 - 0.5
     if int(choise_media.get()) < 150:
@@ -60,7 +54,8 @@ def finish():
         result = f'Размер изделия {int(width_suit.get()) + 4}x{int(height_suit.get()) + 4}\n' \
                  f'На 1 листе SRA3 {sum_on_list()} изделий.\n' \
                  f'необходимо {lists} листов, на сумму {lists * paper_price()}руб.\n' \
-                 f'Цена тиража: {int(print_calc()) * lists + paper_price() * lists} руб.'
+                 f'Цена тиража: {int(print_calc()) * lists + paper_price() * lists} руб.\n'\
+                 f'Заливка страницы CMYK {color_s.sum_cmyk()}'
         label_finish['text'] = result
         return result
 
@@ -104,12 +99,7 @@ choise_media.grid(column=1, row=2, columnspan=2)
 pressrun_txt = Label(window, text='Тираж').grid(column=0, row=3, pady=5)
 pressrun = Entry(window, width=5)
 pressrun.grid(column=1, row=3, padx=5)
-# Выбор плотности заливки
-density_var = BooleanVar()
-density_var.set(2)
-density_1 = Radiobutton(window, text='до 30%', variable=density_var, value=0).grid(column=0, row=4)
-density_2 = Radiobutton(window, text='около 50%', variable=density_var, value=1).grid(column=1, row=4)
-density_3 = Radiobutton(window, text='плотная', variable=density_var, value=2).grid(column=2, row=4)
+
 # Кнопка ФИНИШ
 finish_b = Button(window, text='START', command=finish).grid(column=1, row=19, pady=5)
 # вывод результата

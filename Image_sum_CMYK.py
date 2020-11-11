@@ -1,7 +1,7 @@
 from PIL import Image
 import numpy as np
 
-im = Image.open(r'E:\py-img\cian-10-10.jpg')
+im = Image.open(r'E:\py-img\333.jpg')
 print(im.format, im.size, im.mode)
 im_cmyk = im.convert('CMYK')
 img_array = np.array(im_cmyk) // 2.55
