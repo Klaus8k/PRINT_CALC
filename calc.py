@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter.ttk import Combobox
 from tkinter import messagebox
+from Image_sum_CMYK import *
 
 
 # Калькуляция печати без бумги
@@ -76,6 +77,8 @@ def sum_on_list() -> object:
     w_list = 320 - 2 * free_space  # размеры для SRA3
     h_list = 450 - 2 * free_space
     sum_list = max((w_list // x) * (h_list // y), (w_list // y) * (h_list // x))
+
+
 
     return sum_list
 
